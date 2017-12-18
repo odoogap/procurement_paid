@@ -7,7 +7,6 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _action_launch_procurement_rule(self):
-        print("LAUCH PROC")
         if self.env['ir.config_parameter'].sudo().get_param('procurement_paid.check_sale', default=False):
 
             orders = list(set(x.order_id for x in self))
@@ -47,6 +46,5 @@ class SaleOrder(models.Model):
         self.btn_procur = self.env['ir.config_parameter'].sudo().get_param('procurement_paid.check_sale', default=False)
 
     def action_ignore_payment(self):
-        # invoice_lines(self.env, self)
         for line in self.order_line:
             line._action_launch_procurement_rule()
