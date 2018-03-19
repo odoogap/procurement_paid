@@ -5,6 +5,7 @@ from odoo import api, fields, models
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    # Check if invoices are fully paid before creating the procurement
     @api.multi
     def _action_launch_procurement_rule(self):
         for rec in self:
@@ -24,6 +25,7 @@ class SaleOrderLine(models.Model):
 class account_payment(models.Model):
     _inherit = 'account.payment'
 
+    # Launch procurement after a payment has been made
     def action_validate_invoice_payment(self):
 
         res = super(account_payment, self).action_validate_invoice_payment()
@@ -31,6 +33,7 @@ class account_payment(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('procurement_paid.check_sale', default=False):
 
             for invoice in self.invoice_ids:
+                # TODO use another method to link SO to invoices
                 sale_order = self.env['sale.order'].search([('name', '=', invoice.origin)])
 
                 if not sale_order.picking_ids:
@@ -50,6 +53,7 @@ class SaleOrder(models.Model):
         for rec in self:
             rec.btn_procur = IrConfigParameterSudo.get_param('procurement_paid.check_sale', default=False)
 
+    # Bypass the module functionality using the button
     def action_ignore_payment(self):
         for line in self.order_line:
             line._action_launch_procurement_rule()

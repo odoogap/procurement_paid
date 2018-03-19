@@ -21,8 +21,6 @@ class ResConfigSettings(models.TransientModel):
             for sale in self.env['sale.order'].sudo().search([]):
                 if sale.delivery_count == 0 and sale.invoice_count > 0:
                     for line in sale.order_line:
-                        print("LAUNCH")
-                        print(sale.name)
                         line.sudo()._action_launch_procurement_rule()
         else:
             params.set_param("procurement_paid.check_sale", self.check_sale)

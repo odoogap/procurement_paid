@@ -10,8 +10,14 @@
     After disabling this module procurements are generated automatically for sale orders that don't have any.
     """,
     'category': 'Sales',
-    'depends' : ['sale_stock', 'base_setup'],
-    'data': ['views/sale_order_view.xml', 'views/res_config_settings_views.xml'],
+    'depends' : [
+        'sale_stock',
+        'base_setup'
+    ],
+    'data': [
+        'views/sale_order_view.xml',
+        'views/res_config_settings_views.xml'
+    ],
     'installable': True,
     'application': False,
 }
